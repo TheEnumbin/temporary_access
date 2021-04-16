@@ -199,6 +199,12 @@ class AdminTempaccessController extends ModuleAdminController{
         $name = Tools::getValue('name');
         $temp_email = Tools::getValue('temp_email');
         $password = Tools::getValue('password');
+
+		if(Employee::employeeExists($temp_email)){
+			$this->errors[] = "An Employee is Already Registered With This Email. Please Enter a New Email.";
+			return false;
+		}
+
         try {
             /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
@@ -212,9 +218,6 @@ class AdminTempaccessController extends ModuleAdminController{
 		$insert_query = "INSERT INTO `" . _DB_PREFIX_ . "employee` (`id_profile`, `id_lang`, `lastname`, `firstname`, `email`, `passwd`, `last_passwd_gen`, `stats_date_from`, `stats_date_to`, `stats_compare_from`, `stats_compare_to`, `stats_compare_option`, `preselect_date_range`, `bo_color`, `bo_theme`, `bo_css`, `default_tab`, `bo_width`, `bo_menu`, `active`, `optin`, `id_last_order`, `id_last_customer_message`, `id_last_customer`, `last_connection_date`, `reset_password_token`, `reset_password_validity`) VALUES
 (1, 1, 'Eight', '$name', '$temp_email', '$password', '2020-12-26 12:54:46', '2020-11-27', '2020-12-27', '0000-00-00', '0000-00-00', 1, NULL, NULL, 'default', 'theme.css', 1, 0, 1, 1, 1, 0, 0, 0, '2020-12-28', NULL, '0000-00-00 00:00:00');";
 
-
-// echo $insert_query . '<br>';
-// echo __FILE__ . ' ' . __LINE__; 
 
 		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute($insert_query);
 		
