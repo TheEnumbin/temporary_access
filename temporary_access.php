@@ -25,8 +25,6 @@ class Temporary_Access extends Module{
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
         $this->define_constants();
-
-        include_once TEMPACCESS_DATA_PATH . 'install_sql.php';
     }
 
     public function install(){

@@ -20,11 +20,18 @@ class tempaccess extends ObjectModel {
 	public $id_tempaccess;
 
 	/**
-	 * Name
+	 * First Name
 	 *
 	 * @var mixed
 	 */
-	public $name;
+	public $first_name;
+
+	/**
+	 * Last Name
+	 *
+	 * @var mixed
+	 */
+	public $last_name;
 
 	/**
 	 * Email
@@ -73,7 +80,12 @@ class tempaccess extends ObjectModel {
 		'primary'   => 'id_tempaccess',
 		'multilang' => false,
 		'fields'    => array(
-			'name'                 => array(
+			'first_name'                 => array(
+				'type'     => self::TYPE_STRING,
+				'validate' => 'isString',
+				'required' => true,
+			),
+			'last_name'                 => array(
 				'type'     => self::TYPE_STRING,
 				'validate' => 'isString',
 				'required' => true,

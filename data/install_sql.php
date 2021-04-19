@@ -5,7 +5,8 @@ $sql = array();
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'tempaccess`(
   `id_tempaccess` int(11) NOT NULL auto_increment,
-  `name` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
   `temp_email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `id_role` int(11) DEFAULT NULL,

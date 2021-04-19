@@ -34,8 +34,16 @@ class AdminTempaccessController extends ModuleAdminController{
 				'filter'  => false,
 				'search'  => false,
 			),
-			'name'       => array(
-				'title'   => $this->l( 'Name' ),
+			'first_name'       => array(
+				'title'   => $this->l( 'First Name' ),
+				'width'   => 440,
+				'type'    => 'text',
+				'orderby' => false,
+				'filter'  => false,
+				'search'  => false,
+			),
+			'last_name'       => array(
+				'title'   => $this->l( 'last Name' ),
 				'width'   => 440,
 				'type'    => 'text',
 				'orderby' => false,
@@ -92,6 +100,10 @@ class AdminTempaccessController extends ModuleAdminController{
 		
 		$edit_all                     = true;
 
+		
+		$id_lang = (int) $this->context->language->id;
+
+		$profiles = Profile::getProfiles($id_lang);
 
 		$this->fields_form = array(
 			'legend'  => array(
@@ -100,10 +112,17 @@ class AdminTempaccessController extends ModuleAdminController{
 			'input'   => array(
 				array(
 					'type'     => 'text',
-					'label'    => $this->l( 'Name' ),
-					'name'     => 'name',
+					'label'    => $this->l( 'First Name' ),
+					'name'     => 'first_name',
 					'required' => true,
-					'desc'     => $this->l( 'Enter The Name' ),
+					'desc'     => $this->l( 'Enter The First Name' ),
+				),
+				array(
+					'type'     => 'text',
+					'label'    => $this->l( 'Last Name' ),
+					'name'     => 'last_name',
+					'required' => true,
+					'desc'     => $this->l( 'Enter The Last Name' ),
 				),
 				array(
 					'type'     => 'text',
@@ -125,21 +144,8 @@ class AdminTempaccessController extends ModuleAdminController{
 					'name'     => 'id_role',
 					'required' => true,
 					'options' => array(
-						'query' => array(
-                            array(
-								'id' => 'a',
-								'name' => 'A',
-							),
-							array(
-								'id' => 'b',
-								'name' => 'B',
-							),
-							array(
-								'id' => 'c',
-								'name' => 'C',
-							),
-                        ),
-                        'id' => 'id',
+						'query' => $profiles,
+                        'id' => 'id_profile',
                         'name' => 'name',
                     ),
 					'desc'     => $this->l( 'Select Role for The User' ),
@@ -196,7 +202,8 @@ class AdminTempaccessController extends ModuleAdminController{
 
 	public function processAdd()
     {
-        $name = Tools::getValue('name');
+        $first_name = Tools::getValue('first_name');
+        $last_name = Tools::getValue('last_name');
         $temp_email = Tools::getValue('temp_email');
         $password = Tools::getValue('password');
 
@@ -214,13 +221,24 @@ class AdminTempaccessController extends ModuleAdminController{
 
 		$password = $crypto->hash($password);
         $id_role = Tools::getValue('id_role');
+		$id_lang = (int) $this->context->language->id;
+		$id_shop = (int) $this->context->shop->id;
+
+		$todate_time = date("Y-m-d H:i:s");
+		$todate = date("Y-m-d");
+
 
 		$insert_query = "INSERT INTO `" . _DB_PREFIX_ . "employee` (`id_profile`, `id_lang`, `lastname`, `firstname`, `email`, `passwd`, `last_passwd_gen`, `stats_date_from`, `stats_date_to`, `stats_compare_from`, `stats_compare_to`, `stats_compare_option`, `preselect_date_range`, `bo_color`, `bo_theme`, `bo_css`, `default_tab`, `bo_width`, `bo_menu`, `active`, `optin`, `id_last_order`, `id_last_customer_message`, `id_last_customer`, `last_connection_date`, `reset_password_token`, `reset_password_validity`) VALUES
-(1, 1, 'Eight', '$name', '$temp_email', '$password', '2020-12-26 12:54:46', '2020-11-27', '2020-12-27', '0000-00-00', '0000-00-00', 1, NULL, NULL, 'default', 'theme.css', 1, 0, 1, 1, 1, 0, 0, 0, '2020-12-28', NULL, '0000-00-00 00:00:00');";
+($id_role, $id_lang, '$last_name', '$first_name', '$temp_email', '$password', '$todate_time', '$todate', '$todate', '0000-00-00', '0000-00-00', 1, NULL, NULL, 'default', 'theme.css', 1, 0, 1, 1, 1, 0, 0, 0, '$todate', NULL, '0000-00-00 00:00:00');";
 
 
 		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute($insert_query);
 		
+		$insertId = Db::getInstance()->Insert_ID();
+
+		$insert_query = "INSERT INTO `" . _DB_PREFIX_ . "employee_shop` (`id_employee`, `id_shop`) VALUES ($insertId, $id_shop);";
+
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute($insert_query);
 		
 
         return parent::processAdd();
