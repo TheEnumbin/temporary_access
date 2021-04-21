@@ -25,6 +25,13 @@ class AdminTempaccessController extends ModuleAdminController{
 
 		include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
 
+		$isTemporary = tempaccess::is_temporary($this->context->employee->email);
+
+		if(!$isTemporary){
+			$this->errors[] = "You dont have permission to access this page!!!";
+			return false;
+		}
+
 		$this->fields_list = array(
 			'id_tempaccess' => array(
 				'title'   => $this->l( 'Id' ),

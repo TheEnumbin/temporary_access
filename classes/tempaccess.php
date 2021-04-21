@@ -197,4 +197,29 @@ class tempaccess extends ObjectModel {
 		return ( Db::getInstance()->execute( $query_1 )
 		&& Db::getInstance()->execute( $query_2 ) );
 	}
+
+	public static function get_temp_email_by_date($date){
+		$sql = "SELECT `temp_email` FROM `"._DB_PREFIX_."tempaccess`  WHERE expire_date = '$date'";
+		$result = Db::getInstance()->getValue($sql);
+		return $result;
+	}
+
+	public static function change_expired_password($mail){
+		$str = "MNO5668PQ5268WX587YZ";
+		$newpass = str_shuffle($str);
+		$new_data = array('passwd'=>$newpass);
+		$where = "email = '" . $mail . "'";
+		$result = Db::getInstance()->update('employee', $new_data, $where );
+		return $result;
+	}
+
+	public static function is_temporary($mail){
+		$sql = "SELECT * FROM `"._DB_PREFIX_."tempaccess`  WHERE temp_email = '$mail'";
+		$result = Db::getInstance()->executeS($sql);
+		if(isset($result) && !empty($result)){
+			return false;
+		}else{
+			return true;
+		}
+	}
 }

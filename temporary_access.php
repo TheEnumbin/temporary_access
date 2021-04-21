@@ -29,6 +29,7 @@ class Temporary_Access extends Module{
 
     public function install(){
         parent::install();
+        $this->registerHook( 'displayBackOfficeHeader' );
         $this->installTab();
         include_once TEMPACCESS_DATA_PATH . 'install_sql.php';
         return true;
@@ -80,4 +81,23 @@ class Temporary_Access extends Module{
         return false;
     }
 
+    public function hookDisplayBackOfficeHeader(){
+        $this->change_expired_access();
+    }
+
+    private function change_expired_access(){
+        Configuration::updateValue('TEMPACCESS_CHECK_DATE', '');
+        $checked_date = Configuration::get('TEMPACCESS_CHECK_DATE');
+        $todate = date("Y-m-d");
+        if($checked_date != $todate){
+            include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
+            $mail = tempaccess::get_temp_email_by_date($todate);
+            if($mail){
+                $changed = tempaccess::change_expired_password($mail);
+                if($changed){
+                    Configuration::updateValue('TEMPACCESS_CHECK_DATE', $todate);
+                }
+            }
+        }
+    }
 }
