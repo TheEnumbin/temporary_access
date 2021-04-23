@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>temporary_access</name>
+    <displayName><![CDATA[Temporary Site Access for PrestaShop]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[Create Temporary Access of Your PrestaShop Site to Make Access Sharing More Secured.]]></description>
+    <author><![CDATA[TheEnumbin]]></author>
+    <tab><![CDATA[dashboard]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to uninstall?]]></confirmUninstall>
+    <is_configurable>0</is_configurable>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

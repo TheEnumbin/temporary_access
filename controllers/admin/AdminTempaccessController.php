@@ -251,6 +251,40 @@ class AdminTempaccessController extends ModuleAdminController{
         return parent::processAdd();
     }
 
+
+	public function processUpdate()
+    {
+		$first_name = Tools::getValue('first_name');
+        $last_name = Tools::getValue('last_name');
+        $temp_email = Tools::getValue('temp_email');
+        $password = Tools::getValue('password');
+
+        try {
+            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+        } catch (CoreException $e) {
+            return false;
+        }
+
+		$password = $crypto->hash($password);
+        $id_role = Tools::getValue('id_role');
+		$id_lang = (int) $this->context->language->id;
+		$id_shop = (int) $this->context->shop->id;
+
+	
+		
+		$new_data = array(
+			'firstname' => $first_name,
+			'lastname' => $last_name,
+			'passwd'=>$password,
+			'id_profile'=>$id_role,
+		);
+		$where = "email = '" . $temp_email . "'";
+		$result = Db::getInstance()->update('employee', $new_data, $where );
+
+        return parent::processUpdate();
+    }
+
     public function initContent(){
         parent::initContent();
     }

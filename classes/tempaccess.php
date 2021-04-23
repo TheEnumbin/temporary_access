@@ -199,8 +199,8 @@ class tempaccess extends ObjectModel {
 	}
 
 	public static function get_temp_email_by_date($date){
-		$sql = "SELECT `temp_email` FROM `"._DB_PREFIX_."tempaccess`  WHERE expire_date = '$date'";
-		$result = Db::getInstance()->getValue($sql);
+		$sql = "SELECT `temp_email` FROM `"._DB_PREFIX_."tempaccess`  WHERE DATE(expire_date) <= '$date'";
+		$result = Db::getInstance()->getValue($sql);	
 		return $result;
 	}
 
@@ -221,5 +221,11 @@ class tempaccess extends ObjectModel {
 		}else{
 			return true;
 		}
+	}
+
+	public static function get_access_to_copy($id){
+		$sql = "SELECT `temp_email`, `password` FROM `"._DB_PREFIX_."tempaccess`  WHERE id_tempaccess = '$id'";
+		$result = Db::getInstance()->executeS($sql);	
+		return $result[0];
 	}
 }

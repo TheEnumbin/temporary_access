@@ -30,6 +30,8 @@ class Temporary_Access extends Module{
     public function install(){
         parent::install();
         $this->registerHook( 'displayBackOfficeHeader' );
+        $this->registerHook( 'displayHeader' );
+        $this->registerHook( 'displayDashboardTop' );
         $this->installTab();
         include_once TEMPACCESS_DATA_PATH . 'install_sql.php';
         return true;
@@ -85,8 +87,26 @@ class Temporary_Access extends Module{
         $this->change_expired_access();
     }
 
+    public function hookdisplayHeader(){
+        $this->change_expired_access();
+    }
+
+    public function hookDisplayDashboardTop(){
+        $controller = Tools::getValue("controller");
+        if($controller == "AdminTempaccess"){
+            $id_temp = Tools::getValue("id_tempaccess");
+            if($id_temp){
+                include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
+                $access = tempaccess::get_access_to_copy($id_temp);
+                echo '<pre>'; 
+                echo 'Email: ' . $access['temp_email'] . '<br>';
+                echo 'Password: ' . $access['password'];
+                echo '</pre>';                 
+            }
+        }
+    }
+
     private function change_expired_access(){
-        Configuration::updateValue('TEMPACCESS_CHECK_DATE', '');
         $checked_date = Configuration::get('TEMPACCESS_CHECK_DATE');
         $todate = date("Y-m-d");
         if($checked_date != $todate){
