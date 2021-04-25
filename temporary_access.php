@@ -20,8 +20,8 @@ class Temporary_Access extends Module{
 
         parent::__construct();
 
-        $this->displayName = $this->l('Temporary Site Access for PrestaShop');
-        $this->description = $this->l('Create Temporary Access of Your PrestaShop Site to Make Access Sharing More Secured.');
+        $this->displayName = $this->l('Temporary Login Password for PrestaShop');
+        $this->description = $this->l('Create Temporary Access For Your PrestaShop Site to Make Access Sharing More Secured.');
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
         $this->define_constants();
