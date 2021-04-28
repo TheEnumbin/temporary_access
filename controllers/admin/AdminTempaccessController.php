@@ -203,7 +203,13 @@ class AdminTempaccessController extends ModuleAdminController{
 			'title' => $this->l( 'Save And Close' ),
 			'class' => 'btn btn-default pull-right',
 		);
-
+		$id_temp = Tools::getValue("id_tempaccess");
+		if(!$id_temp){
+			$str = "MNO5668PQ5268WX587YZ";
+			$newpass = str_shuffle($str);
+			$this->fields_value['password'] = $newpass;                 
+		}
+		
 		return parent::renderForm();
 	}
 
