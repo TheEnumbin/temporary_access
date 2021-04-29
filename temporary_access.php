@@ -20,7 +20,7 @@ class Temporary_Access extends Module{
 
         parent::__construct();
 
-        $this->displayName = $this->l('Temporary Login Password for PrestaShop');
+        $this->displayName = $this->l('Temporary Login Access for PrestaShop');
         $this->description = $this->l('Create Temporary Access For Your PrestaShop Site to Make Access Sharing More Secured.');
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
@@ -98,7 +98,9 @@ class Temporary_Access extends Module{
             if($id_temp){
                 include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
                 $access = tempaccess::get_access_to_copy($id_temp);
+                $link = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_);
                 echo '<pre>'; 
+                echo 'Admin Url: ' . $link . '<br>';
                 echo 'Email: ' . $access['temp_email'] . '<br>';
                 echo 'Password: ' . $access['password'];
                 echo '</pre>';                 
