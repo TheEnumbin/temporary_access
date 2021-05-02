@@ -5,23 +5,23 @@ if (!defined('_PS_VERSION_')) {
 }
 
 
-class Temporary_Access extends Module{
+class Presta_Templogin extends Module{
 
     public function __construct(){
-        $this->name = 'temporary_access';
+        $this->name = 'presta_templogin';
         $this->tab = 'dashboard';
         $this->version = '1.0.0';
         $this->author = 'TheEnumbin';
         $this->ps_versions_compliancy = [
-            'min' => '1.6',
+            'min' => '1.7',
             'max' => _PS_VERSION_
         ];
         $this->bootstrap = true;
 
         parent::__construct();
 
-        $this->displayName = $this->l('Temporary Login Access for PrestaShop');
-        $this->description = $this->l('Create Temporary Access For Your PrestaShop Site to Make Access Sharing More Secured.');
+        $this->displayName = $this->l('Presta Temporary Login Password');
+        $this->description = $this->l('With this module you can create employee account with temporary password which ensures you wont have to change the password after the work is done.');
 
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
         $this->define_constants();
@@ -33,7 +33,7 @@ class Temporary_Access extends Module{
         $this->registerHook( 'displayHeader' );
         $this->registerHook( 'displayDashboardTop' );
         $this->installTab();
-        include_once TEMPACCESS_DATA_PATH . 'install_sql.php';
+        include_once PRESTATEMPL_DATA_PATH . 'install_sql.php';
         return true;
     }
 
@@ -49,21 +49,21 @@ class Temporary_Access extends Module{
 
     private function define_constants(){
        
-        if(!defined('TEMPACCESS_CLASSES_PATH')){
-            define('TEMPACCESS_CLASSES_PATH', _PS_MODULE_DIR_ . 'temporary_access/classes/');
+        if(!defined('PRESTATEMPL_CLASSES_PATH')){
+            define('PRESTATEMPL_CLASSES_PATH', _PS_MODULE_DIR_ . 'presta_templogin/classes/');
         }
-        if(!defined('TEMPACCESS_DATA_PATH')){
-            define('TEMPACCESS_DATA_PATH', _PS_MODULE_DIR_ . 'temporary_access/data/');
+        if(!defined('PRESTATEMPL_DATA_PATH')){
+            define('PRESTATEMPL_DATA_PATH', _PS_MODULE_DIR_ . 'presta_templogin/data/');
         }
     }
 
     private function installTab(){
         $tab = new Tab();
         $tab->active = 1;
-        $tab->class_name = 'AdminTempaccess';
+        $tab->class_name = 'AdminTempaccount';
         $tab->name = array();
         foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = $this->l('Temporary Access');
+            $tab->name[$lang['id_lang']] = $this->l('Temporary Accounts');
         }
         $tab->id_parent = (int) Tab::getIdFromClassName('CONFIGURE');
         $tab->module = $this->name;
@@ -73,7 +73,7 @@ class Temporary_Access extends Module{
 
     public function uninstall_tab()
     {
-        $id_tab = (int)Tab::getIdFromClassName('AdminTempaccess');
+        $id_tab = (int)Tab::getIdFromClassName('AdminTempaccount');
         if ($id_tab) {
             $tab = new Tab($id_tab);
 
@@ -93,31 +93,31 @@ class Temporary_Access extends Module{
 
     public function hookDisplayDashboardTop(){
         $controller = Tools::getValue("controller");
-        if($controller == "AdminTempaccess"){
-            $id_temp = Tools::getValue("id_tempaccess");
+        if($controller == "AdminTempaccount"){
+            $id_temp = Tools::getValue("id_tempaccount");
             if($id_temp){
-                include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
-                $access = tempaccess::get_access_to_copy($id_temp);
+                include_once PRESTATEMPL_CLASSES_PATH . 'tempaccount.php';
+                $access = tempaccount::get_access_to_copy($id_temp);
                 $link = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_);
                 echo '<pre>'; 
                 echo 'Admin Url: ' . $link . '<br>';
-                echo 'Email: ' . $access['temp_email'] . '<br>';
-                echo 'Password: ' . $access['password'];
+                echo 'Email: ' . $access['tempaccount_email'] . '<br>';
+                echo 'Password: ' . $access['tempaccount_pass'];
                 echo '</pre>';                 
             }
         }
     }
 
     private function change_expired_access(){
-        $checked_date = Configuration::get('TEMPACCESS_CHECK_DATE');
+        $checked_date = Configuration::get('PRESTATEMPL_CHECK_DATE');
         $todate = date("Y-m-d");
         if($checked_date != $todate){
-            include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
-            $mail = tempaccess::get_temp_email_by_date($todate);
+            include_once PRESTATEMPL_CLASSES_PATH . 'tempaccount.php';
+            $mail = tempaccount::get_tempaccount_email_by_date($todate);
             if($mail){
-                $changed = tempaccess::change_expired_password($mail);
+                $changed = tempaccount::change_expired_password($mail);
                 if($changed){
-                    Configuration::updateValue('TEMPACCESS_CHECK_DATE', $todate);
+                    Configuration::updateValue('PRESTATEMPL_CHECK_DATE', $todate);
                 }
             }
         }

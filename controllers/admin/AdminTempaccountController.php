@@ -8,14 +8,14 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
-class AdminTempaccessController extends ModuleAdminController{
+class AdminTempaccountController extends ModuleAdminController{
     
     public function __construct(){
 
-        $this->table            = 'tempaccess';
-		$this->className        = 'tempaccess';
+        $this->table            = 'tempaccount';
+		$this->className        = 'tempaccount';
 		$this->lang             = false;
-		$this->module           = 'temporary_access';
+		$this->module           = 'presta_templogin';
 		$this->_defaultOrderBy  = 'position';
 		$this->bootstrap        = true;
 		$this->_defaultOrderWay = 'DESC';
@@ -23,9 +23,9 @@ class AdminTempaccessController extends ModuleAdminController{
 
 		parent::__construct();
 
-		include_once TEMPACCESS_CLASSES_PATH . 'tempaccess.php';
+		include_once PRESTATEMPL_CLASSES_PATH . 'tempaccount.php';
 
-		$isTemporary = tempaccess::is_temporary($this->context->employee->email);
+		$isTemporary = tempaccount::is_temporary($this->context->employee->email);
 
 		if(!$isTemporary){
 			$this->errors[] = "You dont have permission to access this page!!!";
@@ -33,7 +33,7 @@ class AdminTempaccessController extends ModuleAdminController{
 		}
 
 		$this->fields_list = array(
-			'id_tempaccess' => array(
+			'id_tempaccount' => array(
 				'title'   => $this->l( 'Id' ),
 				'width'   => 100,
 				'type'    => 'text',
@@ -57,7 +57,7 @@ class AdminTempaccessController extends ModuleAdminController{
 				'filter'  => false,
 				'search'  => false,
 			),
-            'temp_email'  => array(
+            'tempaccount_email'  => array(
 				'title'   => $this->l( 'Email' ),
 				'width'   => 440,
 				'type'    => 'text',
@@ -103,7 +103,7 @@ class AdminTempaccessController extends ModuleAdminController{
 	 * @return void
 	 */
 	public function renderForm() {
-		$tempaccess_is_edit         = false;
+		$tempaccount_is_edit         = false;
 		
 		$edit_all                     = true;
 
@@ -114,7 +114,7 @@ class AdminTempaccessController extends ModuleAdminController{
 
 		$this->fields_form = array(
 			'legend'  => array(
-				'title' => $this->l( 'Add Temporary Access Account' ),
+				'title' => $this->l( 'Add Temporary Login Account' ),
 			),
 			'input'   => array(
 				array(
@@ -134,14 +134,14 @@ class AdminTempaccessController extends ModuleAdminController{
 				array(
 					'type'     => 'text',
 					'label'    => $this->l( 'Email' ),
-					'name'     => 'temp_email',
+					'name'     => 'tempaccount_email',
 					'required' => true,
 					'desc'     => $this->l( 'Enter The Email' ),
 				),
 				array(
 					'type'     => 'text',
 					'label'    => $this->l( 'Password' ),
-					'name'     => 'password',
+					'name'     => 'tempaccount_pass',
 					'required' => true,
 					'desc'     => $this->l( 'Enter The Email' ),
 				),
@@ -203,11 +203,11 @@ class AdminTempaccessController extends ModuleAdminController{
 			'title' => $this->l( 'Save And Close' ),
 			'class' => 'btn btn-default pull-right',
 		);
-		$id_temp = Tools::getValue("id_tempaccess");
+		$id_temp = Tools::getValue("id_tempaccount");
 		if(!$id_temp){
 			$str = "MNO5668PQ5268WX587YZ";
 			$newpass = str_shuffle($str);
-			$this->fields_value['password'] = $newpass;                 
+			$this->fields_value['tempaccount_pass'] = $newpass;                 
 		}
 		
 		return parent::renderForm();
@@ -217,10 +217,10 @@ class AdminTempaccessController extends ModuleAdminController{
     {
         $first_name = Tools::getValue('first_name');
         $last_name = Tools::getValue('last_name');
-        $temp_email = Tools::getValue('temp_email');
-        $password = Tools::getValue('password');
+        $tempaccount_email = Tools::getValue('tempaccount_email');
+        $tempaccount_pass = Tools::getValue('tempaccount_pass');
 
-		if(Employee::employeeExists($temp_email)){
+		if(Employee::employeeExists($tempaccount_email)){
 			$this->errors[] = "An Employee is Already Registered With This Email. Please Enter a New Email.";
 			return false;
 		}
@@ -232,7 +232,7 @@ class AdminTempaccessController extends ModuleAdminController{
             return false;
         }
 
-		$password = $crypto->hash($password);
+		$tempaccount_pass = $crypto->hash($tempaccount_pass);
         $id_role = Tools::getValue('id_role');
 		$id_lang = (int) $this->context->language->id;
 		$id_shop = (int) $this->context->shop->id;
@@ -242,7 +242,7 @@ class AdminTempaccessController extends ModuleAdminController{
 
 
 		$insert_query = "INSERT INTO `" . _DB_PREFIX_ . "employee` (`id_profile`, `id_lang`, `lastname`, `firstname`, `email`, `passwd`, `last_passwd_gen`, `stats_date_from`, `stats_date_to`, `stats_compare_from`, `stats_compare_to`, `stats_compare_option`, `preselect_date_range`, `bo_color`, `bo_theme`, `bo_css`, `default_tab`, `bo_width`, `bo_menu`, `active`, `optin`, `id_last_order`, `id_last_customer_message`, `id_last_customer`, `last_connection_date`, `reset_password_token`, `reset_password_validity`) VALUES
-($id_role, $id_lang, '$last_name', '$first_name', '$temp_email', '$password', '$todate_time', '$todate', '$todate', '0000-00-00', '0000-00-00', 1, NULL, NULL, 'default', 'theme.css', 1, 0, 1, 1, 1, 0, 0, 0, '$todate', NULL, '0000-00-00 00:00:00');";
+($id_role, $id_lang, '$last_name', '$first_name', '$tempaccount_email', '$tempaccount_pass', '$todate_time', '$todate', '$todate', '0000-00-00', '0000-00-00', 1, NULL, NULL, 'default', 'theme.css', 1, 0, 1, 1, 1, 0, 0, 0, '$todate', NULL, '0000-00-00 00:00:00');";
 
 
 		Db::getInstance(_PS_USE_SQL_SLAVE_)->execute($insert_query);
@@ -262,8 +262,8 @@ class AdminTempaccessController extends ModuleAdminController{
     {
 		$first_name = Tools::getValue('first_name');
         $last_name = Tools::getValue('last_name');
-        $temp_email = Tools::getValue('temp_email');
-        $password = Tools::getValue('password');
+        $tempaccount_email = Tools::getValue('tempaccount_email');
+        $tempaccount_pass = Tools::getValue('tempaccount_pass');
 
         try {
             /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
@@ -272,7 +272,7 @@ class AdminTempaccessController extends ModuleAdminController{
             return false;
         }
 
-		$password = $crypto->hash($password);
+		$tempaccount_pass = $crypto->hash($tempaccount_pass);
         $id_role = Tools::getValue('id_role');
 		$id_lang = (int) $this->context->language->id;
 		$id_shop = (int) $this->context->shop->id;
@@ -282,10 +282,10 @@ class AdminTempaccessController extends ModuleAdminController{
 		$new_data = array(
 			'firstname' => $first_name,
 			'lastname' => $last_name,
-			'passwd'=>$password,
+			'passwd'=>$tempaccount_pass,
 			'id_profile'=>$id_role,
 		);
-		$where = "email = '" . $temp_email . "'";
+		$where = "email = '" . $tempaccount_email . "'";
 		$result = Db::getInstance()->update('employee', $new_data, $where );
 
         return parent::processUpdate();

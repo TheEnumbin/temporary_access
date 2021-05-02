@@ -7,17 +7,17 @@ if ( ! defined( '_PS_VERSION_' ) ) {
 /**
  * Classyproductextratab object model class for extra tab objects.
  */
-class tempaccess extends ObjectModel {
+class tempaccount extends ObjectModel {
 
 
 
 
 	/**
-	 * id_tempaccess id of the item.
+	 * id_tempaccount id of the item.
 	 *
 	 * @var mixed
 	 */
-	public $id_tempaccess;
+	public $id_tempaccount;
 
 	/**
 	 * First Name
@@ -38,14 +38,14 @@ class tempaccess extends ObjectModel {
 	 *
 	 * @var mixed
 	 */
-	public $temp_email;
+	public $tempaccount_email;
 
 	/**
 	 * Password
 	 *
 	 * @var mixed
 	 */
-	public $password;
+	public $tempaccount_pass;
 
 	/**
 	 * Role
@@ -76,8 +76,8 @@ class tempaccess extends ObjectModel {
 	public $position;
 
 	public static $definition = array(
-		'table'     => 'tempaccess',
-		'primary'   => 'id_tempaccess',
+		'table'     => 'tempaccount',
+		'primary'   => 'id_tempaccount',
 		'multilang' => false,
 		'fields'    => array(
 			'first_name'                 => array(
@@ -90,12 +90,12 @@ class tempaccess extends ObjectModel {
 				'validate' => 'isString',
 				'required' => true,
 			),
-			'temp_email'                 => array(
+			'tempaccount_email'                 => array(
 				'type'     => self::TYPE_STRING,
 				'validate' => 'isString',
 				'required' => true,
 			),
-			'password'                 => array(
+			'tempaccount_pass'                 => array(
 				'type'     => self::TYPE_STRING,
 				'validate' => 'isString',
 				'required' => true,
@@ -147,7 +147,7 @@ class tempaccess extends ObjectModel {
 	 */
 	public static function getHigherPosition() {
 		$sql      = 'SELECT MAX(`position`)
-                FROM `' . _DB_PREFIX_ . 'tempaccess`';
+                FROM `' . _DB_PREFIX_ . 'tempaccount`';
 		$position = DB::getInstance()->getValue( $sql );
 		return ( is_numeric( $position ) ) ? $position : -1;
 	}
@@ -156,7 +156,7 @@ class tempaccess extends ObjectModel {
 	 * GetInstance provides the instance of the class.
 	 */
 	public static function GetInstance() {
-		$ins = new tempaccess();
+		$ins = new tempaccount();
 		return $ins;
 	}
 
@@ -169,37 +169,37 @@ class tempaccess extends ObjectModel {
 	public function updatePosition( $way, $position ) {
 		if ( ! $res = Db::getInstance()->executeS(
 			'
-            SELECT `id_tempaccess`, `position`
-            FROM `' . _DB_PREFIX_ . 'tempaccess`
+            SELECT `id_tempaccount`, `position`
+            FROM `' . _DB_PREFIX_ . 'tempaccount`
             ORDER BY `position` ASC'
 		)
 		) {
 			return false;
 		}
-		foreach ( $res as $tempaccess ) {
-			if ( (int) $tempaccess['id_tempaccess'] == (int) $this->id ) {
-				$moved_tempaccess = $tempaccess;
+		foreach ( $res as $tempaccount ) {
+			if ( (int) $tempaccount['id_tempaccount'] == (int) $this->id ) {
+				$moved_tempaccount = $tempaccount;
 			}
 		}
-		if ( ! isset( $moved_tempaccess ) || ! isset( $position ) ) {
+		if ( ! isset( $moved_tempaccount ) || ! isset( $position ) ) {
 			return false;
 		}
-		$query_1 = ' UPDATE `' . _DB_PREFIX_ . 'tempaccess`
+		$query_1 = ' UPDATE `' . _DB_PREFIX_ . 'tempaccount`
         SET `position`= `position` ' . ( $way ? '- 1' : '+ 1' ) . '
         WHERE `position`
         ' . ( $way
-		? '> ' . (int) $moved_tempaccess['position'] . ' AND `position` <= ' . (int) $position
-		: '< ' . (int) $moved_tempaccess['position'] . ' AND `position` >= ' . (int) $position . '
+		? '> ' . (int) $moved_tempaccount['position'] . ' AND `position` <= ' . (int) $position
+		: '< ' . (int) $moved_tempaccount['position'] . ' AND `position` >= ' . (int) $position . '
         ' );
-		$query_2 = ' UPDATE `' . _DB_PREFIX_ . 'tempaccess`
+		$query_2 = ' UPDATE `' . _DB_PREFIX_ . 'tempaccount`
         SET `position` = ' . (int) $position . '
-        WHERE `id_tempaccess` = ' . (int) $moved_tempaccess['id_tempaccess'];
+        WHERE `id_tempaccount` = ' . (int) $moved_tempaccount['id_tempaccount'];
 		return ( Db::getInstance()->execute( $query_1 )
 		&& Db::getInstance()->execute( $query_2 ) );
 	}
 
-	public static function get_temp_email_by_date($date){
-		$sql = "SELECT `temp_email` FROM `"._DB_PREFIX_."tempaccess`  WHERE DATE(expire_date) <= '$date'";
+	public static function get_tempaccount_email_by_date($date){
+		$sql = "SELECT `tempaccount_email` FROM `"._DB_PREFIX_."tempaccount`  WHERE DATE(expire_date) <= '$date'";
 		$result = Db::getInstance()->getValue($sql);	
 		return $result;
 	}
@@ -214,7 +214,7 @@ class tempaccess extends ObjectModel {
 	}
 
 	public static function is_temporary($mail){
-		$sql = "SELECT * FROM `"._DB_PREFIX_."tempaccess`  WHERE temp_email = '$mail'";
+		$sql = "SELECT * FROM `"._DB_PREFIX_."tempaccount`  WHERE tempaccount_email = '$mail'";
 		$result = Db::getInstance()->executeS($sql);
 		if(isset($result) && !empty($result)){
 			return false;
@@ -224,7 +224,7 @@ class tempaccess extends ObjectModel {
 	}
 
 	public static function get_access_to_copy($id){
-		$sql = "SELECT `temp_email`, `password` FROM `"._DB_PREFIX_."tempaccess`  WHERE id_tempaccess = '$id'";
+		$sql = "SELECT `tempaccount_email`, `tempaccount_pass` FROM `"._DB_PREFIX_."tempaccount`  WHERE id_tempaccount = '$id'";
 		$result = Db::getInstance()->executeS($sql);	
 		return $result[0];
 	}
