@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 
-$sql = array();
+
+$sql = [];
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'tempaccess`(
   `id_tempaccess` int(11) NOT NULL auto_increment,
@@ -16,9 +17,9 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'tempaccess`(
   PRIMARY KEY (`id_tempaccess`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8';
 
-if ( is_array( $sql ) && ! empty( $sql ) ) {
-    foreach ( $sql as $sq ) :
-        if ( ! Db::getInstance()->Execute( $sq ) ) {
+if (is_array($sql) && ! empty($sql)) {
+    foreach ($sql as $sq) :
+        if (! Db::getInstance()->Execute($sq)) {
             return false;
         }
     endforeach;
