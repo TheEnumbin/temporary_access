@@ -93,10 +93,11 @@ class AdminTempaccessController extends ModuleAdminController
         if (isset($this->_filter) && trim($this->_filter) == '') {
             $this->_filter = $this->original_filter;
         }
-
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        return parent::renderList();
+
+        $advertise = $this->advertise_template();
+        return parent::renderList() . $advertise;
     }
 
     /**
@@ -297,5 +298,12 @@ class AdminTempaccessController extends ModuleAdminController
     public function initContent()
     {
         parent::initContent();
+    }
+
+    protected function advertise_template()
+    {
+        // Fetch and render the template file
+        $this->context->smarty->assign('module_dir', $this->module->getPathUri());
+        return $this->context->smarty->fetch($this->module->getLocalPath() . 'views/templates/admin/advertise_template.tpl');
     }
 }

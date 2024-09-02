@@ -25,66 +25,7 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
-.omni-get-pro {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.omniversepricing-wrapper .omniversepricing-sec h2 {
-    text-align: center;
-}
-
-.omniversepricing-header {
-    text-align: center;
-}
-
-.omniversepricing-header .omniversepricing-lang-changer {
-    background-color: #fff;
-    padding: 8px;
-}
-
-.omniversepricing-price-history table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.omniversepricing-price-history table td,
-.omniversepricing-price-history table th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-.omniversepricing-price-history,
-.omniversepricing-custom-section {
-    margin-top: 12px;
-}
-
-.omniversepricing-custom-field {
-    padding: 8px;
-    margin-right: 6px;
-}
-
-.promniverse-promo {
-    background-color: #fff;
-}
-
-.omni-sync-loader {
-    display: none;
-}
-
-.omni-custom-hook {
-    background: #30bcd9;
-    width: 50%;
-    padding: 13px;
-    font-size: 14px;
-    color: #fff;
-    border-radius: 2px;
-    font-weight: 600;
-}
-
-.omni-advertisement-wrapper {
+.infofields-advertisement-wrapper {
     display: flex;
     justify-content: space-between;
     gap: 33px;

@@ -87,8 +87,10 @@ class Temporary_Access extends Module
         return false;
     }
 
+
     public function hookDisplayBackOfficeHeader()
     {
+        $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
         $this->change_expired_access();
     }
 
